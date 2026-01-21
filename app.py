@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = "static/uploads"
 MODEL_PATH = "model/haaland_lock.pth"
-SECRET_FILE = "secret/hidden_file.pdf"
+SECRET_FILE = "secret/Fixed Wing Planes Specifications.pdf"
 IMG_SIZE = 160
 THRESHOLD = 0.39   # higher = stricter
 
