@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Haaland FaceLock</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(circle at top,#020617,#000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Poppins,sans-serif;
+    color:white;
+}
+
+.card {
+    width:430px;
+    padding:30px;
+    border-radius:24px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px);
+    box-shadow:0 0 60px rgba(34,211,238,0.3);
+    text-align:center;
+}
+
+h1 {
+    font-family:Orbitron,sans-serif;
+    color:#22d3ee;
+    margin-bottom:5px;
+}
+
+.preview {
+    margin-top:20px;
+    position:relative;
+    border-radius:18px;
+    overflow:hidden;
+    display:none;
+}
+
+.preview img {
+    width:100%;
+    display:block;
+}
+
+.scan {
+    position:absolute;
+    top:-100%;
+    left:0;
+    width:100%;
+    height:100%;
+    background:linear-gradient(180deg,transparent,rgba(34,211,238,0.5),transparent);
+    animation:scan 1.6s linear infinite;
+}
+
+@keyframes scan {
+    from { top:-100%; }
+    to { top:100%; }
+}
+
+.upload {
+    margin-top:20px;
+    border:2px dashed #22d3ee;
+    padding:20px;
+    border-radius:16px;
+}
+
+input{display:none;}
+
+label {
+    padding:12px 26px;
+    border-radius:30px;
+    background:linear-gradient(135deg,#22d3ee,#3b82f6);
+    font-weight:bold;
+    cursor:pointer;
+    color:#020617;
+}
+
+button {
+    margin-top:15px;
+    padding:12px 30px;
+    border-radius:30px;
+    border:none;
+    background:linear-gradient(135deg,#22d3ee,#6366f1);
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#status {
+    margin-top:18px;
+    font-size:1.1rem;
+    font-weight:bold;
+}
+
+#download {
+    display:none;
+    margin-top:14px;
+    padding:12px 26px;
+    background:#22c55e;
+    color:#022c22;
+    border-radius:30px;
+    font-weight:bold;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h1>🔒 HAALAND FACELOCK</h1>
+<p>Biometric access system</p>
+
+<div class="upload">
+<form id="form">
+<input type="file" id="image" accept="image/*" required>
+<label for="image">📷 Upload Face</label><br>
+<button>Scan Face</button>
+</form>
+</div>
+
+<div class="preview" id="preview">
+<img id="previewImg">
+<div class="scan"></div>
+</div>
+
+<div id="status"></div>
+<a id="download" href="/download">⬇ Download Secure File</a>
+</div>
+
+<script>
+const form = document.getElementById("form");
+const statusBox = document.getElementById("status");
+const preview = document.getElementById("preview");
+const imgTag = document.getElementById("previewImg");
+const downloadBtn = document.getElementById("download");
+const input = document.getElementById("image");
+
+input.addEventListener("change", () => {
+    const file = input.files[0];
+    if(file){
+        imgTag.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    }
+});
+
+form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    statusBox.style.color="#facc15";
+    statusBox.innerText="⏳ Scanning...";
+    downloadBtn.style.display="none";
+
+    const data = new FormData();
+    data.append("image", input.files[0]);
+
+    const res = await fetch("/verify",{method:"POST",body:data});
+    const out = await res.json();
+
+    if(out.status === "success"){
+        statusBox.style.color="#22c55e";
+        statusBox.innerText=`✅ Access Granted ( ${out.confidence}% )`;
+        downloadBtn.style.display="inline-block";
+    } else {
+        statusBox.style.color="#ef4444";
+        statusBox.innerText=`❌ Access Denied ( ${out.confidence}% )`;
+    }
+});
+</script>
+
+</body>
+</html>
