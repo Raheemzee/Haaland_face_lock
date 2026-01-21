@@ -21,7 +21,7 @@ UPLOAD_FOLDER = "static/uploads"
 MODEL_PATH = "model/haaland_lock.pth"
 SECRET_FILE = "secret/hidden_file.pdf"
 IMG_SIZE = 160
-THRESHOLD = 0.40   # higher = stricter
+THRESHOLD = 0.39   # higher = stricter
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
